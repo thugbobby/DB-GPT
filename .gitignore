@@ -29,7 +29,6 @@ wheels/
 models/
 # Soft link
 models
-plugins/
 
 pip-wheel-metadata/
 share/python-wheels/
