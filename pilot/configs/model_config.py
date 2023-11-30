@@ -41,6 +41,8 @@ def get_device() -> str:
 
 
 LLM_MODEL_CONFIG = {
+    "defog-sqlcoder-34b-alpha": os.path.join(MODEL_PATH, "defog-sqlcoder-34b-alpha"),
+    "Phind-CodeLlama-34B-v2": os.path.join(MODEL_PATH, "Phind-CodeLlama-34B-v2"),
     "flan-t5-base": os.path.join(MODEL_PATH, "flan-t5-base"),
     "vicuna-13b": os.path.join(MODEL_PATH, "vicuna-13b"),
     "vicuna-7b": os.path.join(MODEL_PATH, "vicuna-7b"),
