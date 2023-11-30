@@ -70,7 +70,7 @@ EXAMPLE_TYPE = ExampleType.ONE_SHOT
 PROMPT_SEP = SeparatorStyle.SINGLE.value
 ### Whether the model service is streaming output
 PROMPT_NEED_STREAM_OUT = True
-PROMPT_TEMPERATURE = 0.5
+PROMPT_TEMPERATURE = 1
 
 prompt = PromptTemplate(
     template_scene=ChatScene.ChatAgent.value(),
