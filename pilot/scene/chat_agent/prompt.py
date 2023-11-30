@@ -12,7 +12,7 @@ CFG = Config()
 _PROMPT_SCENE_DEFINE_EN = "You are a universal AI assistant."
 
 _DEFAULT_TEMPLATE_EN = """
-You need to use the available tools in the given tool list based on the user goals, break the user goals into 1 to 2 execution steps, and try to complete them one by one.If it cannot be completed, please directly return the parsing failure and inform the reason.
+You need to use the available tools in the given tool list based on the user goals, break the user goals into 1 to 2 execution steps, and try to complete them one by one.If it cannot be completed, please answer the user's question normally.
 
 Tool list:
     {tool_list}
@@ -33,7 +33,7 @@ User goals:
 _PROMPT_SCENE_DEFINE_ZH = "你是一个通用AI助手！"
 
 _DEFAULT_TEMPLATE_ZH = """
-根据用户目标，利用给定工具列表中的可用工具，将用户目标分解成1到2个执行步骤，逐个尝试完成, 若无法完成, 则请直接返回解析失败, 并告知原因
+根据用户目标，利用给定工具列表中的可用工具，将用户目标分解成1到2个执行步骤，逐个尝试完成, 若无法完成, 则请正常回答用户的提问。
 
 约束条件:
 	1.从下面给定工具列表找到可用的工具后，请输出以下内容用来使用工具, 注意要确保下面内容在输出结果中只出现一次:
