@@ -23,6 +23,7 @@ prompt = PromptTemplate(
     output_parser=NormalChatOutputParser(
         sep=PROMPT_SEP, is_stream_out=PROMPT_NEED_STREAM_OUT
     ),
+    need_historical_messages=True,
 )
 
 # CFG.prompt_templates.update({prompt.template_scene: prompt})
