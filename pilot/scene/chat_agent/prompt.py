@@ -12,7 +12,7 @@ CFG = Config()
 _PROMPT_SCENE_DEFINE_EN = "You are a universal AI assistant."
 
 _DEFAULT_TEMPLATE_EN = """
-You need to analyze the user goals and, under the given constraints, prioritize using one of the following tools to solve the user goals.
+First, please analyze the user goals based on the context and determine whether you need to use the tool from the tool list. If you do not need to use the tool, please ignore the following constraints and satisfy the user goals. If you need to use a tool, please think step by step according to the user's goals, and how to give priority to using the given tool to answer or complete the user's goals while satisfying the following constraints.
 
 Tool list:
     {tool_list}
@@ -33,7 +33,7 @@ User goals:
 _PROMPT_SCENE_DEFINE_ZH = "你是一个通用AI助手！"
 
 _DEFAULT_TEMPLATE_ZH = """
-根据用户目标，请一步步思考，如何在满足下面约束条件的前提下，优先使用给出工具回答或者完成用户目标。
+首先请先根据上下文分析一下用户目标，判断是否需要从工具列表中使用工具，若不需要使用工具则请忽略下面的约束条件，满足用户目标即可。若是需要使用工具，则请根据用户目标，请一步步思考，如何在满足下面约束条件的前提下，优先使用给出工具回答或者完成用户目标。
 
 约束条件:
 	1.从下面给定工具列表找到可用的工具后，请输出以下内容用来使用工具, 注意要确保下面内容在输出结果中只出现一次:
