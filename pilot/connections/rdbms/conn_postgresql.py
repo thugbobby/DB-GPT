@@ -169,7 +169,7 @@ class PostgreSQLDatabase(RDBMSDatabase):
 
     def table_simple_info(self):
         _sql = f"""
-            SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
+           SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
             FROM (
                 SELECT c.relname AS table_name, a.attname AS column_name
                 FROM pg_catalog.pg_class c
@@ -183,14 +183,12 @@ class PostgreSQLDatabase(RDBMSDatabase):
                 ORDER BY c.relname, a.attnum
             ) sub
             GROUP BY table_name;
-        """
-        print("bysql: ", _sql)
+            """
         cursor = self.session.execute(text(_sql))
         results = cursor.fetchall()
         return results
 
-
-def get_fields(self, table_name, schema_name="public"):
+    def get_fields(self, table_name, schema_name="public"):
         """Get column fields about specified table."""
         session = self._db_sessions()
         cursor = session.execute(
