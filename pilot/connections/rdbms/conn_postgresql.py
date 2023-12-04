@@ -168,10 +168,46 @@ class PostgreSQLDatabase(RDBMSDatabase):
         return self.session.execute(text("SELECT current_database()")).scalar()
 
     def table_simple_info(self):
+        max_columns_per_query = 10
         _sql = f"""
            SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
+        FROM (
+            SELECT c.relname AS table_name, a.attname AS column_name,
+                   row_number() OVER (PARTITION BY c.relname ORDER BY a.attnum) AS col_seq
+            FROM pg_catalog.pg_class c
+            JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+            JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
+            WHERE c.relkind = 'r'
+            AND a.attnum > 0
+            AND NOT a.attisdropped
+            AND n.nspname NOT LIKE 'pg_%'
+            AND n.nspname != 'information_schema'
+        ) sub
+        WHERE col_seq <= {max_columns_per_query}
+        GROUP BY table_name;
+            """
+
+        schema_info = {}
+        while True:
+            cursor = self.session.execute(text(_sql))
+            partial_results = cursor.fetchall()
+            if not partial_results:
+                break
+
+            # 合并结果
+            for table_name, partial_schema_info in partial_results:
+                if table_name in schema_info:
+                    schema_info[table_name] += ", " + partial_schema_info
+                else:
+                    schema_info[table_name] = partial_schema_info
+
+            # 更新SQL模板以获取下一批列
+            max_columns_per_query += 10
+            _sql = f"""
+               SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
             FROM (
-                SELECT c.relname AS table_name, a.attname AS column_name
+                SELECT c.relname AS table_name, a.attname AS column_name,
+                       row_number() OVER (PARTITION BY c.relname ORDER BY a.attnum) AS col_seq
                 FROM pg_catalog.pg_class c
                 JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                 JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
@@ -180,13 +216,12 @@ class PostgreSQLDatabase(RDBMSDatabase):
                 AND NOT a.attisdropped
                 AND n.nspname NOT LIKE 'pg_%'
                 AND n.nspname != 'information_schema'
-                ORDER BY c.relname, a.attnum
             ) sub
+            WHERE col_seq > {max_columns_per_query} AND col_seq <= {max_columns_per_query + 10}
             GROUP BY table_name;
             """
-        cursor = self.session.execute(text(_sql))
-        results = cursor.fetchall()
-        return results
+
+        return [(table, cols) for table, cols in schema_info.items()]
 
     def get_fields(self, table_name, schema_name="public"):
         """Get column fields about specified table."""
