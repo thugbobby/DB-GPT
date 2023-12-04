@@ -169,35 +169,28 @@ class PostgreSQLDatabase(RDBMSDatabase):
 
     def table_simple_info(self):
         _sql = f"""
-            SELECT 
-            sub.table_name, 
-            string_agg(sub.column_name, ', ' ORDER BY sub.column_index) AS schema_info
+            SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
             FROM (
-                SELECT 
-                    c.relname AS table_name, 
-                    a.attname AS column_name,
-                    row_number() OVER (PARTITION BY c.relname ORDER BY a.attnum) as column_index
-                FROM 
-                    pg_catalog.pg_class c
-                    JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-                    JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
-                WHERE 
-                    c.relkind = 'r'
-                    AND a.attnum > 0
-                    AND NOT a.attisdropped
-                    AND n.nspname NOT LIKE 'pg_%'
-                    AND n.nspname != 'information_schema'
+                SELECT c.relname AS table_name, a.attname AS column_name
+                FROM pg_catalog.pg_class c
+                JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
+                WHERE c.relkind = 'r'
+                AND a.attnum > 0
+                AND NOT a.attisdropped
+                AND n.nspname NOT LIKE 'pg_%'
+                AND n.nspname != 'information_schema'
+                ORDER BY c.relname, a.attnum
             ) sub
-            GROUP BY 
-                sub.table_name
-            ORDER BY 
-                sub.table_name;
-            """
+            GROUP BY table_name;
+        """
+        print("bysql: ", _sql)
         cursor = self.session.execute(text(_sql))
         results = cursor.fetchall()
         return results
 
-    def get_fields(self, table_name, schema_name="public"):
+
+def get_fields(self, table_name, schema_name="public"):
         """Get column fields about specified table."""
         session = self._db_sessions()
         cursor = session.execute(
