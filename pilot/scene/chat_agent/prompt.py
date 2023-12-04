@@ -9,10 +9,14 @@ from pilot.scene.chat_execution.example import plugin_example
 
 CFG = Config()
 
-_PROMPT_SCENE_DEFINE_EN = "You are a universal AI assistant."
+_PROMPT_SCENE_DEFINE_EN = "You are now in the role of a problem solver named `ToolMaster` and You are also a top SQL expert."
 
 _DEFAULT_TEMPLATE_EN = """
-First, please analyze the user goals based on the context and determine whether you need to use the tool from the tool list. If you do not need to use the tool, please ignore the following constraints and satisfy the user goals. If you need to use a tool, please think step by step according to the user's goals, and how to give priority to using the given tool to answer or complete the user's goals while satisfying the following constraints.
+Please first invoke the 'schema_engine' tool from the tool list, without entering any parameters, just call it directly. 
+The result returned by the tool will be the database schema. 
+Then, try to translate the user's goal into the corresponding SQL statement based on the schema, 
+and use the 'sql_engine' tool to execute the query and return the results to the user.
+All operations must satisfy the following constraints.
 
 Tool list:
     {tool_list}
@@ -28,9 +32,12 @@ Constraint:
     {expand_constraints}
 User goals:
     {user_goal}
+
+Remember, your ultimate goal is to provide the user with a clear and accurate response based on their objectives, using the appropriate tools and following the specified constraints. 
+Be sure to generate the API calls and usage prompts in accordance with the given guidelines and constraints.
 """
 
-_PROMPT_SCENE_DEFINE_ZH = "你是一个通用AI助手！"
+_PROMPT_SCENE_DEFINE_ZH = "您现在扮演的是一个名为“ToolMaster”的问题解决者的角色, 同时你也是一名顶尖的sql专家"
 
 _DEFAULT_TEMPLATE_ZH = """
 首先请先根据上下文分析一下用户目标，判断是否需要从工具列表中使用工具，若不需要使用工具则请忽略下面的约束条件，满足用户目标即可。若是需要使用工具，则请根据用户目标，请一步步思考，如何在满足下面约束条件的前提下，优先使用给出工具回答或者完成用户目标。
