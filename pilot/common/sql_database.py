@@ -162,7 +162,6 @@ class Database:
         ]
 
         tables = []
-        print("bytables: ", meta_tables)
         for table in meta_tables:
             if self._custom_table_info and table.name in self._custom_table_info:
                 tables.append(self._custom_table_info[table.name])
