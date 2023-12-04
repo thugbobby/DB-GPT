@@ -63,12 +63,14 @@ class ChatWithDbAutoExecute(BaseChat):
                     self.current_user_input,
                     CFG.KNOWLEDGE_SEARCH_TOP_SIZE,
                 )
+                print("bytable:", table_infos)
         except Exception as e:
             print("db summary find error!" + str(e))
         if not table_infos:
             table_infos = await blocking_func_to_async(
                 self._executor, self.database.table_simple_info
             )
+            print("bytable:", table_infos)
 
         input_values = {
             "db_name": self.db_name,
@@ -77,6 +79,7 @@ class ChatWithDbAutoExecute(BaseChat):
             "dialect": self.database.dialect,
             "table_info": table_infos,
         }
+        print("byinput:", input_values)
         return input_values
 
     def stream_plugin_call(self, text):
