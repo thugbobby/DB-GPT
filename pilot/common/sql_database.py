@@ -128,8 +128,10 @@ class Database:
         _sql = f"""
                 select concat(table_name, "(" , group_concat(column_name), ")") as schema_info from information_schema.COLUMNS where table_schema="{self.get_current_db_name(session)}" group by TABLE_NAME;
             """
+        print("bysql: ", _sql)
         cursor = session.execute(text(_sql))
         results = cursor.fetchall()
+        print("byresult: ", results)
         return results
 
     @property

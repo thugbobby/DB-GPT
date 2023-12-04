@@ -63,14 +63,14 @@ class ChatWithDbAutoExecute(BaseChat):
                     self.current_user_input,
                     CFG.KNOWLEDGE_SEARCH_TOP_SIZE,
                 )
-                print("bytable:", table_infos)
+                print("bytable1:", table_infos)
         except Exception as e:
             print("db summary find error!" + str(e))
         if not table_infos:
             table_infos = await blocking_func_to_async(
                 self._executor, self.database.table_simple_info
             )
-            print("bytable:", table_infos)
+            print("bytable2:", table_infos)
 
         input_values = {
             "db_name": self.db_name,
