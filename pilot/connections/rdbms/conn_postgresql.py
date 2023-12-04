@@ -186,6 +186,7 @@ class PostgreSQLDatabase(RDBMSDatabase):
         WHERE col_seq <= {max_columns_per_query}
         GROUP BY table_name;
             """
+        print("bysql: ", _sql)
 
         schema_info = {}
         while True:
