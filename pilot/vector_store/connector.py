@@ -8,8 +8,6 @@ class VectorStoreConnector:
     """VectorStoreConnector, can connect different vector db provided load document api_v1 and similar search api_v1.
     1.load_document:knowledge document source into vector store.(Chroma, Milvus, Weaviate)
     2.similar_search: similarity search from vector_store
-    how to use reference:https://db-gpt.readthedocs.io/en/latest/modules/vector.html
-    how to integrate:https://db-gpt.readthedocs.io/en/latest/modules/vector/milvus/milvus.html
 
     """
 
@@ -41,6 +39,18 @@ class VectorStoreConnector:
            - topk: topk
         """
         return self.client.similar_search(doc, topk)
+
+    def similar_search_with_scores(self, doc: str, topk: int, score_threshold: float):
+        """
+        similar_search_with_score in vector database..
+        Return docs and relevance scores in the range [0, 1].
+        Args:
+            doc(str): query text
+            topk(int): return docs nums. Defaults to 4.
+            score_threshold(float): score_threshold: Optional, a floating point value between 0 to 1 to
+                    filter the resulting set of retrieved docs,0 is dissimilar, 1 is most similar.
+        """
+        return self.client.similar_search_with_scores(doc, topk, score_threshold)
 
     def vector_name_exists(self):
         """is vector store name exist."""

@@ -21,8 +21,8 @@
     <a href="https://github.com/eosphoros-ai/DB-GPT/issues">
       <img alt="Open Issues" src="https://img.shields.io/github/issues-raw/eosphoros-ai/DB-GPT" />
     </a>
-    <a href="https://discord.gg/nASQyBjvY">
-      <img alt="Discord" src="https://dcbadge.vercel.app/api/server/nASQyBjvY?compact=true&style=flat" />
+    <a href="https://discord.gg/7uQnPuveTY">
+      <img alt="Discord" src="https://dcbadge.vercel.app/api/server/7uQnPuveTY?compact=true&style=flat" />
     </a>
     <a href="https://codespaces.new/eosphoros-ai/DB-GPT">
       <img alt="Open in GitHub Codespaces" src="https://github.com/codespaces/badge.svg" />
@@ -30,7 +30,7 @@
   </p>
 
 
-[**简体中文**](README.zh.md) | [**Discord**](https://discord.gg/nASQyBjvY) | [**Documents**](https://db-gpt.readthedocs.io/en/latest/) | [**Wechat**](https://github.com/eosphoros-ai/DB-GPT/blob/main/README.zh.md#%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC) | [**Community**](https://github.com/eosphoros-ai/community)
+[**简体中文**](README.zh.md) | [**Discord**](https://discord.gg/7uQnPuveTY) | [**Documents**](https://docs.dbgpt.site) | [**Wechat**](https://github.com/eosphoros-ai/DB-GPT/blob/main/README.zh.md#%E8%81%94%E7%B3%BB%E6%88%91%E4%BB%AC) | [**Community**](https://github.com/eosphoros-ai/community)
 </div>
 
 ## What is DB-GPT?
@@ -51,11 +51,11 @@ In the era of Data 3.0, enterprises and developers can take the ability to creat
 ## Contents
 - [Install](#install)
 - [Demo](#demo)
-- [introduction](#introduction)
-- [features](#features)
-- [contribution](#contribution)
-- [roadmap](#roadmap)
-- [contact](#contact-information)
+- [Introduction](#introduction)
+- [Features](#features)
+- [Contribution](#contribution)
+- [Roadmap](#roadmap)
+- [Contact](#contact-information)
 
 [DB-GPT Youtube Video](https://www.youtube.com/watch?v=f5_g0OObZBQ)
 
@@ -102,7 +102,11 @@ At present, we have introduced several key features to showcase our current capa
 
   We offer extensive model support, including dozens of large language models (LLMs) from both open-source and API agents, such as LLaMA/LLaMA2, Baichuan, ChatGLM, Wenxin, Tongyi, Zhipu, and many more. 
 
-  - [Current Supported LLMs](http://docs.dbgpt.site/docs/modules/smmf)
+  - News
+    - 🔥🔥🔥  [qwen-72b-chat](https://huggingface.co/Qwen/Qwen-72B-Chat)
+    - 🔥🔥🔥  [Yi-34B-Chat](https://huggingface.co/01-ai/Yi-34B-Chat)
+  - [More Supported LLMs](http://docs.dbgpt.site/docs/modules/smmf)
+
 - **Privacy and Security**
   
   We ensure the privacy and security of data through the implementation of various technologies, including privatized large models and proxy desensitization.
@@ -201,9 +205,9 @@ The core capabilities primarily consist of the following components:
   - [ ] StarRocks
 
 ### Multi-Models And vLLM
-- [x] [Cluster Deployment](https://db-gpt.readthedocs.io/en/latest/getting_started/install/cluster/vms/index.html)
+- [x] [Cluster Deployment](https://docs.dbgpt.site/docs/installation/model_service/cluster)
 - [x] [Fastchat Support](https://github.com/lm-sys/FastChat)
-- [x] [vLLM Support](https://db-gpt.readthedocs.io/en/latest/getting_started/install/llm/vllm/vllm.html)
+- [x] [vLLM Support](https://docs.dbgpt.site/docs/installation/advanced_usage/vLLM_inference)
 - [ ] Cloud-native environment and support for Ray environment
 - [ ] Service Registry(eg:nacos)
 - [ ] Compatibility with OpenAI's interfaces
@@ -212,14 +216,14 @@ The core capabilities primarily consist of the following components:
 ### Agents market and Plugins
 - [x] multi-agents framework
 - [x] custom plugin development 
-- [ ] plugin market
+- [x] plugin market
 - [ ] Integration with CoT
 - [ ] Enrich plugin sample library
 - [ ] Support for AutoGPT protocol
 - [ ] Integration of multi-agents and visualization capabilities, defining LLM+Vis new standards
 
 ### Cost and Observability
-- [x] [debugging](https://db-gpt.readthedocs.io/en/latest/getting_started/observability.html)
+- [x] [debugging](https://docs.dbgpt.site/docs/application_manual/advanced_tutorial/debugging)
 - [ ] Observability
 - [ ] cost & budgets
 
@@ -244,11 +248,10 @@ As of October 10, 2023, through the fine-tuning of an open-source model with 13 
 
 ## Licence
 
-The MIT License (MIT)
 
 ## Contact Information
 We are working on building a community, if you have any ideas for building the community, feel free to contact us.
-[![](https://dcbadge.vercel.app/api/server/nASQyBjvY?compact=true&style=flat)](https://discord.gg/nASQyBjvY)
+[![](https://dcbadge.vercel.app/api/server/7uQnPuveTY?compact=true&style=flat)](https://discord.gg/7uQnPuveTY)
 
 <p align="center">
   <img src="./assets/wechat.jpg" width="300px" />
