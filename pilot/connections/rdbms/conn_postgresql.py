@@ -171,22 +171,21 @@ class PostgreSQLDatabase(RDBMSDatabase):
         max_columns_per_query = 10
         _sql = f"""
            SELECT table_name, string_agg(column_name, ', '::text) AS schema_info
-        FROM (
-            SELECT c.relname AS table_name, a.attname AS column_name,
-                   row_number() OVER (PARTITION BY c.relname ORDER BY a.attnum) AS col_seq
-            FROM pg_catalog.pg_class c
-            JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
-            JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
-            WHERE c.relkind = 'r'
-            AND a.attnum > 0
-            AND NOT a.attisdropped
-            AND n.nspname NOT LIKE 'pg_%'
-            AND n.nspname != 'information_schema'
-        ) sub
-        WHERE col_seq <= {max_columns_per_query}
-        GROUP BY table_name;
+            FROM (
+                SELECT c.relname AS table_name, a.attname AS column_name,
+                       row_number() OVER (PARTITION BY c.relname ORDER BY a.attnum) AS col_seq
+                FROM pg_catalog.pg_class c
+                JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
+                JOIN pg_catalog.pg_attribute a ON a.attrelid = c.oid
+                WHERE c.relkind = 'r'
+                AND a.attnum > 0
+                AND NOT a.attisdropped
+                AND n.nspname NOT LIKE 'pg_%'
+                AND n.nspname != 'information_schema'
+            ) sub
+            WHERE col_seq <= {max_columns_per_query}
+            GROUP BY table_name;
             """
-        print("bysql: ", _sql)
 
         schema_info = {}
         while True:
