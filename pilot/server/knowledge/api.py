@@ -198,7 +198,7 @@ def document_list(space_name: str, query_request: ChunkQueryRequest):
         return Result.failed(code="E000X", msg=f"document chunk list error {e}")
 
 
-@router.post("/knowledge/{vector_name}/query")
+@router.post("/knowledge/query")
 def similar_query(space_name: str, query_request: KnowledgeQueryRequest):
     print(f"Received params: {space_name}, {query_request}")
     embedding_factory = CFG.SYSTEM_APP.get_component(
@@ -210,8 +210,6 @@ def similar_query(space_name: str, query_request: KnowledgeQueryRequest):
         embedding_factory=embedding_factory,
     )
     docs = client.similar_search(query_request.query, query_request.top_k)
-    for d in docs:
-        print("docs: ", type(d), d)
     res = [
         {"content": d.page_content}
         for d in docs
