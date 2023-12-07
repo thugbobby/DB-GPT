@@ -206,7 +206,7 @@ def similar_query(space_name: str, query_request: KnowledgeQueryRequest):
     )
     client = EmbeddingEngine(
         model_name=EMBEDDING_MODEL_CONFIG[CFG.EMBEDDING_MODEL],
-        vector_store_config={"vector_store_name": space_name},
+        vector_store_config={"vector_store_name": space_name, "vector_store_type": CFG.VECTOR_STORE_TYPE},
         embedding_factory=embedding_factory,
     )
     docs = client.similar_search(query_request.query, query_request.top_k)
