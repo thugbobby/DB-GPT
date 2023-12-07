@@ -210,6 +210,7 @@ def similar_query(space_name: str, query_request: KnowledgeQueryRequest):
         embedding_factory=embedding_factory,
     )
     docs = client.similar_search(query_request.query, query_request.top_k)
+    print("docs: ", docs)
     res = [
         KnowledgeQueryResponse(text=d.page_content, source=d.metadata["source"])
         for d in docs
