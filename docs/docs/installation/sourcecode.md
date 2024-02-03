@@ -97,6 +97,8 @@ Configure the proxy and modify LLM_MODEL, PROXY_API_URL and API_KEY in the `.env
 LLM_MODEL=chatgpt_proxyllm
 PROXY_API_KEY={your-openai-sk}
 PROXY_SERVER_URL=https://api.openai.com/v1/chat/completions
+# If you use gpt-4
+# PROXYLLM_BACKEND=gpt-4
 ```
   </TabItem>
   <TabItem value="qwen" label="通义千问">
@@ -172,13 +174,12 @@ or
 git clone https://huggingface.co/moka-ai/m3e-large
 ```
 
-Configure the proxy and modify LLM_MODEL, PROXY_API_URL and API_KEY in the `.env`file
+Configure the proxy and modify LLM_MODEL, MODEL_VERSION, API_KEY and API_SECRET in the `.env`file
 
 ```python
 # .env
 LLM_MODEL=wenxin_proxyllm
-PROXY_SERVER_URL={your_service_url}
-WEN_XIN_MODEL_VERSION={version}
+WEN_XIN_MODEL_VERSION={version} # ERNIE-Bot or ERNIE-Bot-turbo
 WEN_XIN_API_KEY={your-wenxin-sk}
 WEN_XIN_API_SECRET={your-wenxin-sct}
 ```
@@ -373,8 +374,17 @@ bash ./scripts/examples/load_examples.sh
 ## Run service
 The DB-GPT service is packaged into a server, and the entire DB-GPT service can be started through the following command.
 ```python
+python dbgpt/app/dbgpt_server.py
+```
+:::info NOTE
+### Run service
+
+If you are running version v0.4.3 or earlier, please start with the following command:
+
+```python
 python pilot/server/dbgpt_server.py
 ```
+:::
 
 ## Visit website
 Open the browser and visit [`http://localhost:5000`](http://localhost:5000)

@@ -152,14 +152,32 @@ bash ./scripts/examples/load_examples.sh
 ## Run service
 
 ```python
-python pilot/server/dbgpt_server.py
+python dbgpt/app/dbgpt_server.py
 ```
 
+:::info NOTE
+### Run service
+
+If you are running version v0.4.3 or earlier, please start with the following command:
+
+```python
+python pilot/server/dbgpt_server.py
+```
+:::
 
 ## Visit website
+
+#### 1. Production model:
 Open the browser and visit [`http://localhost:5000`](http://localhost:5000)
 
-
+#### 2. Development mode:
+```
+cd web & npm install
+cp .env.template .env
+// set the API_BASE_URL to your DB-GPT server address, it usually is http://localhost:5000
+npm run dev
+```
+Open the browser and visit [`http://localhost:3000`](http://localhost:3000)
 
 
 

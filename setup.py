@@ -14,6 +14,11 @@ import functools
 with open("README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+IS_DEV_MODE = os.getenv("IS_DEV_MODE", "true").lower() == "true"
+# If you modify the version, please modify the version in the following files:
+# dbgpt/_version.py
+DB_GPT_VERSION = os.getenv("DB_GPT_VERSION", "0.4.7")
+
 BUILD_NO_CACHE = os.getenv("BUILD_NO_CACHE", "true").lower() == "true"
 LLAMA_CPP_GPU_ACCELERATION = (
     os.getenv("LLAMA_CPP_GPU_ACCELERATION", "true").lower() == "true"
@@ -292,7 +297,7 @@ def torch_requires(
             )
             torchvision_url = _build_wheels(
                 "torchvision",
-                torch_version,
+                torchvision_version,
                 base_url_func=lambda v, x, y: f"https://download.pytorch.org/whl/{x}",
                 supported_cuda_versions=supported_versions,
             )
@@ -352,34 +357,63 @@ def llama_cpp_python_cuda_requires():
 
 def core_requires():
     """
-    pip install db-gpt or pip install "db-gpt[core]"
+    pip install dbgpt or pip install "dbgpt[core]"
     """
     setup_spec.extras["core"] = [
         "aiohttp==3.8.4",
         "chardet==5.1.0",
         "importlib-resources==5.12.0",
-        "psutil==5.9.4",
         "python-dotenv==1.0.0",
-        "colorama==0.4.6",
-        "prettytable",
         "cachetools",
+        "pydantic<2,>=1",
     ]
-
-    setup_spec.extras["framework"] = [
-        "coloredlogs",
+    # Simple command line dependencies
+    setup_spec.extras["cli"] = setup_spec.extras["core"] + [
+        "prettytable",
+        "click",
+        "psutil==5.9.4",
+        "colorama==0.4.6",
+    ]
+    # Just use by DB-GPT internal, we should find the smallest dependency set for run
+    # we core unit test.
+    # The dependency "framework" is too large for now.
+    setup_spec.extras["simple_framework"] = setup_spec.extras["cli"] + [
+        "pydantic<2,>=1",
         "httpx",
+        "jinja2",
+        "fastapi==0.98.0",
+        "uvicorn",
+        "shortuuid",
+        # change from fixed version 2.0.22 to variable version, because other
+        # dependencies are >=1.4, such as pydoris is <2
+        "SQLAlchemy>=1.4,<3",
+        # for cache
+        "msgpack",
+        # for cache
+        # TODO: pympler has not been updated for a long time and needs to
+        #  find a new toolkit.
+        "pympler",
         "sqlparse==0.4.4",
+        "duckdb==0.8.1",
+        "duckdb-engine",
+    ]
+    # TODO: remove fschat from simple_framework
+    if BUILD_FROM_SOURCE:
+        setup_spec.extras["simple_framework"].append(
+            f"fschat @ {BUILD_FROM_SOURCE_URL_FAST_CHAT}"
+        )
+    else:
+        setup_spec.extras["simple_framework"].append("fschat")
+
+    setup_spec.extras["framework"] = setup_spec.extras["simple_framework"] + [
+        "coloredlogs",
         "seaborn",
         # https://github.com/eosphoros-ai/DB-GPT/issues/551
         "pandas==2.0.3",
         "auto-gpt-plugin-template",
         "gTTS==2.3.1",
         "langchain>=0.0.286",
-        "SQLAlchemy==2.0.22",
-        "fastapi==0.98.0",
         "pymysql",
-        "duckdb==0.8.1",
-        "duckdb-engine",
         "jsonschema",
         # TODO move transformers to default
         # "transformers>=4.31.0",
@@ -389,25 +423,17 @@ def core_requires():
         "openpyxl==3.1.2",
         "chardet==5.1.0",
         "xlrd==2.0.1",
-        # for cache, TODO pympler has not been updated for a long time and needs to find a new toolkit.
-        "pympler",
         "aiofiles",
-        # for cache
-        "msgpack",
         # for agent
         "GitPython",
+        # For AWEL dag visualization, graphviz is a small package, also we can move it to default.
+        "graphviz",
     ]
-    if BUILD_FROM_SOURCE:
-        setup_spec.extras["framework"].append(
-            f"fschat @ {BUILD_FROM_SOURCE_URL_FAST_CHAT}"
-        )
-    else:
-        setup_spec.extras["framework"].append("fschat")
 
 
 def knowledge_requires():
     """
-    pip install "db-gpt[knowledge]"
+    pip install "dbgpt[knowledge]"
     """
     setup_spec.extras["knowledge"] = [
         "spacy==3.5.3",
@@ -424,7 +450,7 @@ def knowledge_requires():
 
 def llama_cpp_requires():
     """
-    pip install "db-gpt[llama_cpp]"
+    pip install "dbgpt[llama_cpp]"
     """
     setup_spec.extras["llama_cpp"] = ["llama-cpp-python"]
     llama_cpp_python_cuda_requires()
@@ -512,7 +538,7 @@ def quantization_requires():
 
 def all_vector_store_requires():
     """
-    pip install "db-gpt[vstore]"
+    pip install "dbgpt[vstore]"
     """
     setup_spec.extras["vstore"] = [
         "grpcio==1.47.5",  # maybe delete it
@@ -523,15 +549,25 @@ def all_vector_store_requires():
 
 def all_datasource_requires():
     """
-    pip install "db-gpt[datasource]"
+    pip install "dbgpt[datasource]"
     """
 
-    setup_spec.extras["datasource"] = ["pymssql", "pymysql", "pyspark", "psycopg2"]
+    setup_spec.extras["datasource"] = [
+        "pymssql",
+        "pymysql",
+        "pyspark",
+        "psycopg2",
+        # for doris
+        # mysqlclient 2.2.x have pkg-config issue on 3.10+
+        "mysqlclient==2.1.0",
+        "pydoris>=1.0.2,<2.0.0",
+        "clickhouse-connect",
+    ]
 
 
 def openai_requires():
     """
-    pip install "db-gpt[openai]"
+    pip install "dbgpt[openai]"
     """
     setup_spec.extras["openai"] = ["tiktoken"]
     if BUILD_VERSION_OPENAI:
@@ -546,28 +582,28 @@ def openai_requires():
 
 def gpt4all_requires():
     """
-    pip install "db-gpt[gpt4all]"
+    pip install "dbgpt[gpt4all]"
     """
     setup_spec.extras["gpt4all"] = ["gpt4all"]
 
 
 def vllm_requires():
     """
-    pip install "db-gpt[vllm]"
+    pip install "dbgpt[vllm]"
     """
     setup_spec.extras["vllm"] = ["vllm"]
 
 
 def cache_requires():
     """
-    pip install "db-gpt[cache]"
+    pip install "dbgpt[cache]"
     """
     setup_spec.extras["cache"] = ["rocksdict"]
 
 
 def default_requires():
     """
-    pip install "db-gpt[default]"
+    pip install "dbgpt[default]"
     """
     setup_spec.extras["default"] = [
         # "tokenizers==0.13.3",
@@ -616,14 +652,46 @@ default_requires()
 all_requires()
 init_install_requires()
 
+# Packages to exclude when IS_DEV_MODE is False
+excluded_packages = ["tests", "*.tests", "*.tests.*", "examples"]
+
+if IS_DEV_MODE:
+    packages = find_packages(exclude=excluded_packages)
+else:
+    packages = find_packages(
+        exclude=excluded_packages,
+        include=[
+            "dbgpt",
+            "dbgpt._private",
+            "dbgpt._private.*",
+            "dbgpt.cli",
+            "dbgpt.cli.*",
+            "dbgpt.configs",
+            "dbgpt.configs.*",
+            "dbgpt.core",
+            "dbgpt.core.*",
+            "dbgpt.util",
+            "dbgpt.util.*",
+            "dbgpt.model",
+            "dbgpt.model.proxy",
+            "dbgpt.model.proxy.*",
+            "dbgpt.model.operators",
+            "dbgpt.model.operators.*",
+            "dbgpt.model.utils",
+            "dbgpt.model.utils.*",
+        ],
+    )
+
 setuptools.setup(
-    name="db-gpt",
-    packages=find_packages(exclude=("tests", "*.tests", "*.tests.*", "examples")),
-    version="0.4.3",
+    name="dbgpt",
+    packages=packages,
+    version=DB_GPT_VERSION,
     author="csunny",
     author_email="cfqcsunny@gmail.com",
-    description="DB-GPT is an experimental open-source project that uses localized GPT large models to interact with your data and environment."
-    " With this solution, you can be assured that there is no risk of data leakage, and your data is 100% private and secure.",
+    description="DB-GPT is an experimental open-source project that uses localized GPT "
+    "large models to interact with your data and environment."
+    " With this solution, you can be assured that there is no risk of data leakage, "
+    "and your data is 100% private and secure.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     install_requires=setup_spec.install_requires,
@@ -633,7 +701,7 @@ setuptools.setup(
     extras_require=setup_spec.extras,
     entry_points={
         "console_scripts": [
-            "dbgpt=pilot.scripts.cli_scripts:main",
+            "dbgpt=dbgpt.cli.cli_scripts:main",
         ],
     },
 )

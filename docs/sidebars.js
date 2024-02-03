@@ -141,6 +141,14 @@ const sidebars = {
             },
             {
               type: 'doc',
+              id: 'application/advanced_tutorial/cli',
+            },
+            {
+              type: 'doc',
+              id: 'application/advanced_tutorial/api',
+            },
+            {
+              type: 'doc',
               id: 'application/advanced_tutorial/debugging',
             },
           ],
@@ -152,6 +160,10 @@ const sidebars = {
             {
               type: 'doc',
               id: 'application/fine_tuning_manual/text_to_sql',
+            },
+            {
+              type: 'doc',
+              id: 'application/fine_tuning_manual/dbgpt_hub',
             },
           ],
         },
@@ -216,10 +228,6 @@ const sidebars = {
           type: 'doc',
           id: 'faq/kbqa',
         }
-        ,{
-          type: 'doc',
-          id: 'faq/chatdata',
-        },
       ],
     },
     
