@@ -5,7 +5,7 @@ import os
 from functools import cache
 
 ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODEL_PATH = os.path.join(ROOT_PATH, "models")
+MODEL_PATH = os.path.join(ROOT_PATH, "models/llms_store")
 PILOT_PATH = os.path.join(ROOT_PATH, "pilot")
 LOGDIR = os.getenv("DBGPT_LOG_DIR", os.path.join(ROOT_PATH, "logs"))
 
@@ -35,6 +35,7 @@ def get_device() -> str:
 
 
 LLM_MODEL_CONFIG = {
+    "sqlcoder-70b-alpha": os.path.join(MODEL_PATH, "sqlcoder-70b-alpha"),
     "dolphin-mixtral": os.path.join(MODEL_PATH, "dolphin-mixtral"),
     "defog-sqlcoder-34b-alpha": os.path.join(MODEL_PATH, "defog-sqlcoder-34b-alpha"),
     "Phind-CodeLlama-34B-v2": os.path.join(MODEL_PATH, "Phind-CodeLlama-34B-v2"),
