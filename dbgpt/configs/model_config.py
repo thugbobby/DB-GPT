@@ -35,6 +35,7 @@ def get_device() -> str:
 
 
 LLM_MODEL_CONFIG = {
+    "Qwen1.5-72B-Chat": os.path.join(MODEL_PATH, "Qwen1.5-72B-Chat"),
     "sqlcoder-70b-alpha": os.path.join(MODEL_PATH, "sqlcoder-70b-alpha"),
     "dolphin-mixtral": os.path.join(MODEL_PATH, "dolphin-mixtral"),
     "defog-sqlcoder-34b-alpha": os.path.join(MODEL_PATH, "defog-sqlcoder-34b-alpha"),
